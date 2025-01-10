@@ -1,7 +1,7 @@
 <?php
 //data database
 $servername = "localhost";
-$database = "e-library2.0";
+$database = "perpus";
 $username = "root";
 $password = "";
 // Create connection

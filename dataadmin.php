@@ -14,7 +14,7 @@ if (isset($_POST['tambah'])) {
   $email = $_POST['email'];
   $adminid = $_POST['adminid'];
   $password = $_POST['password'];
-  $query = "('','$nama', '$email','$adminid','$password')";
+  $query = "(null,'$nama', '$email','$adminid','$password')";
   if (tambah("admin", $query) == 1) {
     echo "<script>
             alert('data berhasil ditambahkan');

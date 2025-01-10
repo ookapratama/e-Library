@@ -6,7 +6,7 @@ include 'header.php';
 //tambah pengarang
 if (isset($_POST['tambah'])) {
     $nama = $_POST['nama'];
-    $query = "('','$nama')";
+    $query = "(null,'$nama')";
     if (tambah("pengarang", $query) == 1) {
         echo "<script>
             alert('data berhasil ditambahkan');

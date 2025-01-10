@@ -11,17 +11,22 @@ if (isset($_POST['tambah'])) {
   $jumlah = $_POST['jumlah'];
   $idpeng = $_POST['idpeng'];
   $idpen = $_POST['idpen'];
-  $query = "('','$kdbuku', '$judul','$tahun','$jumlah','$idpeng','$idpen')";
-  if (tambah("buku", $query) == 1) {
-    echo "<script>
-            alert('data berhasil ditambahkan');
-            document.location.href ='buku.php?status=success';
-        </script>";
-  } else {
-    echo "<script>
-            alert('data gagal ditambahkan');
-            document.location.href ='buku.php';
-        </script>";
+  $query = "(null,'$kdbuku', '$judul','$tahun','$jumlah','$idpeng','$idpen')";
+  try {
+    //code...
+    if (tambah("buku", $query) == 1) {
+      echo "<script>
+              alert('data berhasil ditambahkan');
+              document.location.href ='buku.php?status=success';
+          </script>";
+    } else {
+      echo "<script>
+              alert('data gagal ditambahkan');
+              document.location.href ='buku.php';
+          </script>";
+    }
+  } catch (\Exception $e) {
+    die(var_dump($e));
   }
 }
 

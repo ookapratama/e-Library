@@ -10,7 +10,7 @@ if (isset($_POST['tambah'])) {
     $tglp = $_POST['tglp'];
     $tglhk = $_POST['tglhk'];
 
-    $query = "('','$idagt','$kdbuku','$tglp','$tglhk')";
+    $query = "(null,'$idagt','$kdbuku','$tglp','$tglhk')";
     tambah("pinjam", $query);
     $sql=mysqli_query($conn, "SELECT * FROM buku WHERE kdbuku='$kdbuku'");
     $data= mysqli_fetch_assoc($sql);
@@ -62,7 +62,7 @@ if(isset($_POST['kembali'])){
     $tglp =$data['tglp'];
     $tglhk =$data['tglhk'];
     $tglk =date('Y-m-d');
-    $query = "('','$idagt','$kdbuku','$tglp','$tglhk','$tglk','$denda')";
+    $query = "(null,'$idagt','$kdbuku','$tglp','$tglhk','$tglk','$denda')";
     hapus('pinjam',$id);
     tambah("kembali", $query);
     $sql=mysqli_query($conn, "SELECT * FROM buku WHERE kdbuku='$kdbuku'");

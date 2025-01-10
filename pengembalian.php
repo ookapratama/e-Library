@@ -40,7 +40,7 @@ include 'header.php';
                             <td><?= $data["tglp"]; ?></td>
                             <td><?= $data["tglhk"]; ?></td>
                             <td><?= $data["tglk"]; ?></td>
-                            <td><?= $data["denda"]; ?></td>
+                            <td>Rp. <?= number_format($data["denda"]); ?></td>
                             
                         </tr>
                         <?php $no++; ?>

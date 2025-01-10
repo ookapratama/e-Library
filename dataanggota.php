@@ -12,7 +12,7 @@ if (isset($_POST['tambah'])) {
   $tglhr = date("Y-m-d",strtotime($_POST['tglhr']));
   $jkel = $_POST['jkel'];
   $alamat = $_POST['alamat'];
-  $query = "('','$idagt','$nama', '$pass' ,'$t4lahir','$tglhr','$jkel','$alamat')";
+  $query = "(null,'$idagt','$nama', '$pass' ,'$t4lahir','$tglhr','$jkel','$alamat')";
   if (tambah("anggota", $query) == 1) {
     echo "<script>
             alert('data berhasil ditambahkan');

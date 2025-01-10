@@ -7,7 +7,7 @@ include 'header.php';
 if (isset($_POST['tambah'])) {
     $penerbit = $_POST['penerbit'];
     $alamat = $_POST['alamat'];
-    $query = "('','$penerbit','$alamat')";
+    $query = "(null,'$penerbit','$alamat')";
     if (tambah("penerbit", $query) == 1) {
         echo "<script>
             alert('data berhasil ditambahkan');
