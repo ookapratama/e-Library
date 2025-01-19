@@ -18,7 +18,6 @@ function tambah($table, $datas)
     global $conn;
 
     $value = cleanStore($datas);
-
     $query = "INSERT INTO $table values $value";
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
@@ -41,9 +40,9 @@ function cleanStore($datas)
 function update($table, $datas, $key, $id)
 {
     global $conn;
-    // put cleared data to query
-    $query = cleanUpdate($datas, $key, $id);
-    $result = mysqli_query($conn, "UPDATE $table SET $query");
+    $setClause = cleanUpdate($datas, $key, $id);
+    $query = "UPDATE $table SET $setClause WHERE id=" . intval($id);
+    $result = mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
 }
 
@@ -51,13 +50,11 @@ function update($table, $datas, $key, $id)
 function cleanUpdate($datas, $key, $id)
 {
     $query = '';
-    $lastData = end($datas);
-
+    $lastIndex = count($datas) - 1;
     foreach ($datas as $i => $item) {
-        if ($item == $lastData) {
-            $query .= $key[$i] . '=' . "'$item'" . ' WHERE id=' . "$id";
-        } else {
-            $query .= $key[$i] . '=' . "'$item'" . ',';
+        $query .= $key[$i] . '=' . "'" . mysqli_real_escape_string($GLOBALS['conn'], $item) . "'";
+        if ($i != $lastIndex) {
+            $query .= ', ';
         }
     }
     return $query;
@@ -116,7 +113,84 @@ function clearCharacters($datas)
     return $clearedData;
 }
 
+// generate kode buku
+function generateKode($prefix)
+{
+    global $conn;
+    $sql = "SELECT MAX(CAST(SUBSTRING_INDEX(kdbuku, '-', -1) AS UNSIGNED)) as last_number FROM buku";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    $nextNumber = ($row['last_number'] === null) ? 1 : $row['last_number'] + 1;
 
+    $prefix = substr($prefix, 0, 1);
+
+    return $prefix . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+}
+
+// upload file 
+function uploadFile($file)
+{
+    $dir = 'asset/img/buku/';
+    $fileName = strtolower($file['name']);
+    $targetDir = $dir . $fileName;
+    $imageFileType = strtolower(pathinfo($targetDir, PATHINFO_EXTENSION));
+
+    try {
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        if (!isset($file['tmp_name']) || empty($file['tmp_name'])) {
+            return [
+                'status' => false,
+                'message' => 'No file selected.'
+            ];
+        }
+
+
+        if ($file["size"] > 5000000) {
+            return [
+                'status' => false,
+                'message' => "Sorry, your file is too large."
+            ];
+        }
+
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'];
+        if (!in_array($imageFileType, $allowedTypes)) {
+            return [
+                'status' => false,
+                'message' => "Sorry, only JPG, JPEG, PNG, GIF, PDF, DOC & DOCX files are allowed."
+            ];
+        }
+
+        $i = 0;
+        $newFileName = $fileName;
+        while (file_exists($dir . $newFileName)) {
+            $i++;
+            $fileName_parts = pathinfo($fileName);
+            $newFileName = $fileName_parts['filename'] . '_' . $i . '.' . $fileName_parts['extension'];
+        }
+        $targetDir = $dir . $newFileName;
+
+        if (move_uploaded_file($file["tmp_name"], $targetDir)) {
+            return [
+                'status' => true,
+                'message' => "File has been uploaded successfully.",
+                'fileName' => $newFileName
+            ];
+        } else {
+            return [
+                'status' => false,
+                'message' => "Sorry, there was an error uploading your file."
+            ];
+        }
+    } catch (\Exception $e) {
+        return [
+            'status' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+}
 
 
 // dump and die
