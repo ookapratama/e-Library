@@ -9,16 +9,24 @@ $data = mysqli_fetch_assoc($row);
 <div class="modal-body">
     <input type="text" name="id" id="id" value="<?= $id; ?>" hidden>
     <div class="form-group">
-        <label for="name">Name</label>
+        <label for="name">Nama Lengkap</label>
         <input type="text" class="form-control" id="nama" name="nama" value="<?= $data['nama']; ?>" required>
+        <input type="hidden"  name="fnama" value="nama">
     </div>
     <div class="form-group">
         <label for="email">Email</label>
-        <input type="text" class="form-control" id="email" name="email" value="<?= $data['email']; ?>" required> 
+        <input type="email" class="form-control" id="email" name="email" value="<?= $data['email']; ?>" required> 
+        <input type="hidden"  name="femail" value="email">
     </div>
     <div class="form-group">
-        <label for="adminid">AdminID</label>
+        <label for="adminid">Username</label>
         <input type="text" class="form-control" id="adminid" name="adminid" value="<?= $data['adminid']; ?>" required> 
+        <input type="hidden"  name="fadminid" value="adminid">
+    </div>
+    <div class="form-group">
+        <label for="password">Password (bisa dikosongkan)</label>
+        <input type="password" class="form-control" id="password" name="password" value="" > 
+        <input type="hidden"  name="fpassword" value="pasw">
     </div>
 </div>
 <div class="modal-footer">

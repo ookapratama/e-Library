@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'header.php';
+$title = 'admin';
 // if(!$_SESSION['login']){
 //     echo "<script>
 // 			alert('Anda belum login!');
@@ -10,43 +11,114 @@ include 'header.php';
 
 //tambah admin
 if (isset($_POST['tambah'])) {
-  $nama = $_POST['name'];
-  $email = $_POST['email'];
-  $adminid = $_POST['adminid'];
-  $password = $_POST['password'];
-  $query = "(null,'$nama', '$email','$adminid','$password')";
-  if (tambah("admin", $query) == 1) {
-    echo "<script>
-            alert('data berhasil ditambahkan');
-            document.location.href ='dataadmin.php?status=success';
-        </script>";
-  } else {
-    echo "<script>
-            alert('data gagal ditambahkan');
-            document.location.href ='dataadmin.php';
-        </script>";
+  try {
+    $nama = $_POST['name'];
+    $email = $_POST['email'];
+    $adminid = $_POST['adminId'];
+    $password = $_POST['password'];
+    $data = array($nama, $email, $adminid, $password);
+
+    // validate if value null
+    $validateValue = validateValue($data);
+    if (!$validateValue) {
+      echo "<script>
+      alert('Periksa kembali form anda');
+      document.location.href ='dataadmin.php';
+      </script>";
+      return;
+    }
+
+    // clear special characters in form
+    $isCleared = clearCharacters($data);
+
+    // validate if data is exist in database
+    $isExistData = isExistData($title, 'adminid', $isCleared[2]);
+    if ($isExistData == 1) {
+      echo "<script>
+              alert('username admin sudah ada');
+              document.location.href ='dataadmin.php';
+          </script>";
+      return;
+    }
+
+    $tambah = tambah($title, $isCleared);
+
+    if ($tambah == 1) {
+      echo "<script>
+              alert('data berhasil ditambahkan');
+              document.location.href ='dataadmin.php?status=success';
+          </script>";
+      return;
+    } else {
+      echo "<script>
+          alert('data gagal ditambahkan');
+          document.location.href ='dataadmin.php';
+          </script>";
+      return;
+    }
+  } catch (\Exception $e) {
+    dd($e);
   }
 }
 
 //edit user
 if (isset($_POST['edit'])) {
-  $id = $_POST['id'];
-  $nama = $_POST['nama'];
-  $email = $_POST['email'];
-  $adminid = $_POST['adminid'];
-  $query = "nama='$nama',email='$email', adminid='$adminid' WHERE id='$id'";
+  try {
 
-  if (update('admin', $query) == 1) {
-    $_SESSION['nama'] = $row["nama"];
-    echo "<script>
-                alert('data berhasil diedit');
-                document.location.href ='dataadmin.php';
-            </script>";
-  } else {
-    echo "<script>
-                alert('data gagal diedit');
-                document.location.href ='dataadmin.php';
-            </script>";
+    $id = $_POST['id'];
+    $nama = $_POST['nama'];
+    $email = $_POST['email'];
+    $adminid = $_POST['adminid'];
+    $password = $_POST['password'];
+
+    $fnama = $_POST['fnama'];
+    $femail = $_POST['femail'];
+    $fadminid = $_POST['fadminid'];
+    $fpassword = $_POST['fpassword'];
+
+    $key = $password == null ? array($fnama, $femail, $fadminid) : array($fnama, $femail, $fadminid, $fpassword);
+    $data = $password == null ? array($nama, $email, $adminid) : array($nama, $email, $adminid, $password);
+
+    // validate if value null
+    $validateValue = validateValue($data);
+    if (!$validateValue) {
+      echo "<script>
+      alert('Periksa kembali form anda');
+      document.location.href ='dataadmin.php';
+      </script>";
+      return;
+    }
+    // clear special characters in form
+    $isCleared = clearCharacters($data);
+
+    // validate if data is exist in database
+    $isExistData = isExistData($title, 'adminid', $isCleared[2], $id);
+    if ($isExistData == 1) {
+      echo "<script>
+              alert('username admin sudah ada');
+              document.location.href ='dataadmin.php';
+          </script>";
+      return;
+    }
+
+    // update data
+    $update = update($title, $isCleared, $key, $id);
+
+
+    if ($update == 1) {
+      $_SESSION['nama'] = $row["nama"];
+      echo "<script>
+                  alert('data berhasil diedit');
+                  document.location.href ='dataadmin.php';
+                  </script>";
+    } else {
+      echo "<script>
+              alert('tidak ada perubahan data');
+              document.location.href ='dataadmin.php';
+          </script>";
+    }
+  } catch (\Exception $e) {
+    dd($e);
   }
 }
 
@@ -73,19 +145,20 @@ if (isset($_POST['edit'])) {
               <th>AdminId
               </th>
               <th>Action</th>
-            </tr>
+              </tr>
           </thead>
           <tbody>
             <?php $no = 1;
             $row = tampil("admin");
             while ($data = mysqli_fetch_assoc($row)) : ?>
-              <tr  class="table-ac">
+              <tr class="table-ac">
                 <td><?= $no; ?></td>
                 <td><?= $data["nama"]; ?></td>
                 <td><?= $data["email"]; ?></td>
                 <td><?= $data["adminid"]; ?></td>
                 <td><a href="#" class="btn btn-warning" onclick="edit(<?= $data['id']; ?>)" data-toggle="modal" data-target="#exampleModalCenter">edit</a>
-                <a class="btn btn-danger" href="hapusadmin.php?id=<?= $data["id"]; ?>" onclick="return confirm('yakin ingin hapus data?')">hapus</a></td>
+                  <a class="btn btn-danger" href="hapusadmin.php?id=<?= $data["id"]; ?>" onclick="return confirm('yakin ingin hapus data?')">hapus</a>
+                </td>
               </tr>
               <?php $no++; ?>
             <?php endwhile; ?>
@@ -106,7 +179,7 @@ if (isset($_POST['edit'])) {
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="" method="POST">
+      <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
         <div id="form">
           <div class="modal-body">
 
@@ -156,4 +229,4 @@ if (isset($_POST['edit'])) {
     xhr.send();
   }
   document.getElementById("dataadmin").className = "nav-item active";
-</script> 
+</script>

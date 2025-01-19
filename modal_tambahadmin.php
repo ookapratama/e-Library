@@ -1,6 +1,6 @@
  <div class="modal-body">
     <div class="form-group">
-        <label for="name">Name</label>
+        <label for="name">Nama Lengkap</label>
         <input type="text" class="form-control" id="name" name="name" required>
     </div>
     <div class="form-group">
@@ -8,7 +8,7 @@
         <input type="text" class="form-control" id="email" name="email" required>
     </div>
     <div class="form-group">
-        <label for="adminid">AdminID</label>
+        <label for="adminid">Username</label>
         <input type="text" class="form-control" id="adminId" name="adminId" required>
     </div>
     <div class="form-group">

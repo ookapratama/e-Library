@@ -37,8 +37,8 @@ include 'header.php';
                             <td><?= $no; ?></td>
                             <td><?= $data["nama"]; ?></td>
                             <td><?= $data["judul"]; ?></td>
-                            <td><?= $data["tglp"]; ?></td>
                             <td><?= $data["tglhk"]; ?></td>
+                            <td><?= $data["tglp"]; ?></td>
                             <td><?= $data["tglk"]; ?></td>
                             <td>Rp. <?= number_format($data["denda"]); ?></td>
                             
