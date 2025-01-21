@@ -27,16 +27,15 @@ if (isset($_POST['tambah'])) {
               document.location.href ='buku.php';
               </script>";
   }
-
   $validateValue = validateValue($datas);
   if (!$validateValue) {
     echo "<script>
-      alert('Periksa kembali form anda');
-      document.location.href ='buku.php';
-      </script>";
+    alert('Periksa kembali form anda');
+    document.location.href ='buku.php';
+    </script>";
     return;
   }
-
+  
   // clear special characters in form
   $isCleared = clearCharacters($datas);
 
@@ -148,7 +147,7 @@ if (isset($_POST['edit'])) {
           </thead>
           <tbody>
             <?php $no = 1;
-            $row = mysqli_query($conn, "SELECT * FROM buku a, pengarang b, penerbit c WHERE a.idpeng=b.idpeng AND a.idpen=c.idpen");
+            $row = mysqli_query($conn, "SELECT a.*, b.nm_pengarang as nm_pengarang, c.penerbit as penerbit FROM buku a, pengarang b, penerbit c WHERE a.idpeng=b.id AND a.idpen=c.idpen");
             while ($data = mysqli_fetch_assoc($row)) : ?>
               <tr>
                 <td><?= $no; ?></td>

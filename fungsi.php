@@ -17,9 +17,21 @@ function tambah($table, $datas)
 {
     global $conn;
 
-    $value = cleanStore($datas);
-    $query = "INSERT INTO $table values $value";
-    mysqli_query($conn, $query);
+    // Validasi table name untuk menghindari SQL injection
+    $table = '`' . str_replace('`', '', $table) . '`';
+
+    $values = array_map(function ($value) use ($conn) {
+        return "'" . mysqli_real_escape_string($conn, $value) . "'";
+    }, $datas);
+
+    $valueString = "(null," . implode(',', $values) . ")";
+    $query = "INSERT INTO $table VALUES $valueString";
+
+    if (!mysqli_query($conn, $query)) {
+        // Handle error
+        throw new Exception("Error: " . mysqli_error($conn));
+    }
+
     return mysqli_affected_rows($conn);
 }
 
@@ -37,28 +49,30 @@ function cleanStore($datas)
     return $query;
 }
 
-function update($table, $datas, $key, $id)
+function update($table, $datas, $keys, $id)
 {
     global $conn;
-    $setClause = cleanUpdate($datas, $key, $id);
-    $query = "UPDATE $table SET $setClause WHERE id=" . intval($id);
-    $result = mysqli_query($conn, $query);
-    return mysqli_affected_rows($conn);
+    try {
+        $updates = [];
+    
+        // Combine keys and values dengan sanitize
+        foreach ($keys as $index => $key) {
+            if (isset($datas[$index])) {
+                $value = mysqli_real_escape_string($conn, $datas[$index]);
+                $updates[] = "`" . $key . "` = '" . $value . "'";
+            }
+        }
+        // Buat query dengan format yang benar
+        $setClause = implode(', ', $updates);
+        $query = "UPDATE $table SET $setClause WHERE id = " . intval($id);
+    
+        $result = mysqli_query($conn, $query);
+        return mysqli_affected_rows($conn);
+    } catch (\Exception $e) {
+        dd($e);
+    }
 }
 
-// put cleaned data to $query
-function cleanUpdate($datas, $key, $id)
-{
-    $query = '';
-    $lastIndex = count($datas) - 1;
-    foreach ($datas as $i => $item) {
-        $query .= $key[$i] . '=' . "'" . mysqli_real_escape_string($GLOBALS['conn'], $item) . "'";
-        if ($i != $lastIndex) {
-            $query .= ', ';
-        }
-    }
-    return $query;
-}
 
 function hapus($table, $id)
 {

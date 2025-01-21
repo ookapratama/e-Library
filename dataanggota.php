@@ -2,18 +2,48 @@
 session_start();
 
 include 'header.php';
+$title = 'anggota';
 
 //tambah user
 if (isset($_POST['tambah'])) {
   $idagt = $_POST['idagt'];
   $nama = $_POST['nama'];
-  $pass = $_POST['passing'];
+  $pass = $_POST['pass'];
   $t4lahir = $_POST['t4lahir'];
-  $tglhr = date("Y-m-d",strtotime($_POST['tglhr']));
+  $tglhr = date("Y-m-d", strtotime($_POST['tglhr']));
   $jkel = $_POST['jkel'];
   $alamat = $_POST['alamat'];
-  $query = "(null,'$idagt','$nama', '$pass' ,'$t4lahir','$tglhr','$jkel','$alamat')";
-  if (tambah("anggota", $query) == 1) {
+
+
+
+  $data = array($idagt, $nama, $pass, $t4lahir, $tglhr, $jkel, $alamat);
+
+  // validate if value null
+  $validateValue = validateValue($data);
+  if (!$validateValue) {
+    echo "<script>
+    alert('Periksa kembali form anda');
+    document.location.href ='dataanggota.php';
+    </script>";
+    return;
+  }
+
+  // clear special characters in form
+  $isCleared = clearCharacters($data);
+
+  // validate if data is exist in database
+  $isExistData = isExistData($title, 'idagt', $isCleared[0]);
+  if ($isExistData == 1) {
+    echo "<script>
+            alert('username anggota sudah ada');
+            document.location.href ='dataanggota.php';
+        </script>";
+    return;
+  }
+
+  $tambah = tambah($title, $isCleared);
+
+  if ($tambah == 1) {
     echo "<script>
             alert('data berhasil ditambahkan');
             document.location.href ='dataanggota.php?status=success';
@@ -29,21 +59,55 @@ if (isset($_POST['tambah'])) {
 //edit user
 if (isset($_POST['edit'])) {
   $id = $_POST['id'];
+  $idagt = $_POST['idagt'];
   $nama = $_POST['nama'];
   $pass = $_POST['pass'];
   $t4lahir = $_POST['t4lahir'];
-  $tglhr = date("Y-m-d",strtotime($_POST['tglhr']));
+  $tglhr = date("Y-m-d", strtotime($_POST['tglhr']));
   $jkel = $_POST['jkel'];
   $alamat = $_POST['alamat'];
-  $query = "nama='$nama', password= '$pass' ,t4lahir='$t4lahir',tglhr='$tglhr',jkel='$jkel',alamat='$alamat' WHERE id='$id'";
-  if (update('anggota', $query) == 1) {
+
+  $fidagt = $_POST['fidagt'];
+  $fnama = $_POST['fnama'];
+  $fpass = $_POST['fpass'];
+  $ft4lahir = $_POST['ft4lahir'];
+  $ftglhr = $_POST['ftglhr'];
+  $fjkel = $_POST['fjkel'];
+  $falamat = $_POST['falamat'];
+
+  $key =  array($fidagt, $fnama, $fpass, $ft4lahir, $ftglhr, $fjkel, $falamat);
+  $data =  array($idagt, $nama, $pass, $t4lahir, $tglhr, $jkel, $alamat);
+  // validate if value null
+  $validateValue = validateValue($data);
+  if (!$validateValue) {
+    echo "<script>
+    alert('Periksa kembali form anda');
+    document.location.href ='dataanggota.php';
+    </script>";
+    return;
+  }
+  // clear special characters in form
+  $isCleared = clearCharacters($data);
+  // validate if data is exist in database
+  $isExistData = isExistData($title, 'idagt', $isCleared[0], $id);
+  if ($isExistData == 1) {
+    echo "<script>
+            alert('username admin sudah ada');
+            document.location.href ='dataanggota.php';
+        </script>";
+    return;
+  }
+
+  $update = update($title, $isCleared, $key, $id);
+
+  if ($update == 1) {
     echo "<script>
                 alert('data berhasil diedit');
                 document.location.href ='dataanggota.php';
             </script>";
   } else {
     echo "<script>
-                alert('data gagal diedit');
+                alert('tidak ada perubahan data');
                 document.location.href ='dataanggota.php';
             </script>";
   }
@@ -53,9 +117,9 @@ if (isset($_POST['edit'])) {
 <!-- Begin Page Content -->
 <div class="container-fluid">
   <!-- Page Heading -->
-  <?php if(isset($_SESSION['login'])):?>
-  <a href="" class="btn btn-success btn-md mb-3" onclick="tambah()" data-toggle="modal" data-target="#exampleModalCenter">Tambah Anggota</a>
-  <?php endif;?>
+  <?php if (isset($_SESSION['login'])): ?>
+    <a href="" class="btn btn-success btn-md mb-3" onclick="tambah()" data-toggle="modal" data-target="#exampleModalCenter">Tambah Anggota</a>
+  <?php endif; ?>
   <!-- DataTales Example -->
   <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -66,7 +130,7 @@ if (isset($_POST['edit'])) {
     <div class="card-body">
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-        <thead class="thead-dark">
+          <thead class="thead-dark">
             <tr>
               <th>No</th>
               <th>ID Anggota</th>
@@ -75,9 +139,9 @@ if (isset($_POST['edit'])) {
               <th>Tanggal Lahir</th>
               <th>Jenis Kelamin</th>
               <th>Alamat</th>
-              <?php if(isset($_SESSION['login'])):?>
-              <th>Action</th>
-              <?php endif;?>
+              <?php if (isset($_SESSION['login'])): ?>
+                <th>Action</th>
+              <?php endif; ?>
 
             </tr>
           </thead>
@@ -85,20 +149,21 @@ if (isset($_POST['edit'])) {
             <?php $no = 1;
             $row = tampil("anggota");
             while ($data = mysqli_fetch_assoc($row)) : ?>
-              <tr >
+              <tr>
                 <td><?= $no; ?></td>
                 <td><?= $data["idagt"]; ?></td>
                 <td><?= $data["nama"]; ?></td>
                 <td><?= $data["t4lahir"]; ?></td>
-                <td><?= $data["tglhr"]; ?></td>
+                <td><?= date('d-M-Y', strtotime($data["tglhr"])); ?></td>
                 <td><?= $data["jkel"]; ?></td>
                 <td><?= $data["alamat"]; ?></td>
-                <?php if(isset($_SESSION['login'])):?>
-                <td><a class="btn btn-warning" href="#" onclick="edit(<?= $data['id']; ?>)" data-toggle="modal" data-target="#exampleModalCenter">edit</a>
-                <a class="btn btn-danger" href="hapusanggota.php?id=<?= $data["id"]; ?>" onclick="return confirm('yakin ingin hapus data?')">hapus</a></td>
-                <?php endif;?>
-               
- 
+                <?php if (isset($_SESSION['login'])): ?>
+                  <td><a class="btn btn-warning" href="#" onclick="edit(<?= $data['id']; ?>)" data-toggle="modal" data-target="#exampleModalCenter">edit</a>
+                    <a class="btn btn-danger" href="hapusanggota.php?id=<?= $data["id"]; ?>" onclick="return confirm('yakin ingin hapus data?')">hapus</a>
+                  </td>
+                <?php endif; ?>
+
+
               </tr>
               <?php $no++; ?>
             <?php endwhile; ?>

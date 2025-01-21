@@ -90,20 +90,18 @@ $nama = $_SESSION['nama'];
                     <i class="fas fa-book" aria-hidden="true"></i>
                     <span>Daftar Buku</span></a>
             </li>
-             <!-- menu 8 -->
-             <?php if(isset($_SESSION['login'])):?>
+             <!-- <?php if(isset($_SESSION['login'])):?>
              <li class="nav-item" id="pinjam">
                 <a class="nav-link" href="pinjam.php">
                     <i class="fas fa-share" aria-hidden="true"></i>
                     <span>Data Peminjaman</span></a>
             </li>
-             <!-- menu 9 -->
              <li class="nav-item" id="kembali">
                 <a class="nav-link" href="pengembalian.php">
                     <i class="fas fa-reply" aria-hidden="true"></i>
                     <span>Data Pengembalian</span></a>
             </li>
-            <?php endif;?>
+            <?php endif;?> -->
             </li>
             <?php if(isset($_SESSION['login'])):?>
                 <li class="nav-item" id="menu6">

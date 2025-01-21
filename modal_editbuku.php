@@ -66,8 +66,8 @@ $data = mysqli_fetch_assoc($row);
                 <label for="idpeng">Pengarang</label>
                 <select class="form-control" id="idpeng" name="idpeng" required>
                     <option value="" selected disabled hidden>Choose here</option>
-                    <?php while ($pengarang = mysqli_fetch_assoc($row)): ?>
-                        <option <?= $pengarang['idpeng'] == $data['idpeng'] ? 'selected' : '' ?> value="<?= $pengarang['idpeng']; ?>"><?= $pengarang['nm_pengarang']; ?></option>
+                    <?php while ($pengarang = mysqli_fetch_assoc($row)):  ?>
+                        <option <?= $pengarang['id'] == $data['idpeng'] ? 'selected' : '' ?> value="<?= $pengarang['id']; ?>"><?= $pengarang['nm_pengarang']; ?></option>
                     <?php endwhile; ?>
                 </select>
             </div>

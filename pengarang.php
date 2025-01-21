@@ -2,12 +2,29 @@
 session_start();
 
 include 'header.php';
+$title = 'pengarang';
 
 //tambah pengarang
 if (isset($_POST['tambah'])) {
     $nama = $_POST['nama'];
-    $query = "(null,'$nama')";
-    if (tambah("pengarang", $query) == 1) {
+
+    $data = array($nama);
+
+    // validate if value null
+    $validateValue = validateValue($data);
+    if (!$validateValue) {
+        echo "<script>
+      alert('Periksa kembali form anda');
+      document.location.href ='pengarang.php';
+      </script>";
+        return;
+    }
+
+    // clear special characters in form
+    $isCleared = clearCharacters($data);
+
+    $query = tambah($title, $isCleared);
+    if ($query == 1) {
         echo "<script>
             alert('data berhasil ditambahkan');
             document.location.href ='pengarang.php';
@@ -22,19 +39,26 @@ if (isset($_POST['tambah'])) {
 
 //edit pengarang
 if (isset($_POST['edit'])) {
-    $id = $_POST['id'];
-    $nama = $_POST['nama'];
-    $query = "nm_pengarang='$nama' WHERE idpeng='$id'";
-    if (update('pengarang', $query) == 1) {
-        echo "<script>
-                alert('data berhasil diedit');
-                document.location.href ='pengarang.php';
-            </script>";
-    } else {
-        echo "<script>
-                alert('data gagal diedit');
-                document.location.href ='pengarang.php';
-            </script>";
+    try {
+        $id = $_POST['id'];
+        $nama = $_POST['nama'];
+    
+        $data = array($nama);
+        $key = ['nm_pengarang'];
+    
+        if (update($title, $data, $key, $id) > 0) {
+            echo "<script>
+                    alert('data berhasil diedit');
+                    document.location.href ='pengarang.php';
+                </script>";
+        } else {
+            echo "<script>
+                    alert('data gagal diedit');
+                    document.location.href ='pengarang.php';
+                </script>";
+        }
+    } catch (\Exception $e) {
+        dd($e);
     }
 }
 
@@ -42,10 +66,10 @@ if (isset($_POST['edit'])) {
 <!-- Begin Page Content -->
 <div class="container-fluid">
     <!-- Page Heading -->
-    
-    <?php if(isset($_SESSION['login'])):?>
-    <a href="" class="btn btn-success btn-md mb-3" onclick="tambah()" data-toggle="modal" data-target="#exampleModalCenter">Tambah Pengarang</a>
-     <?php endif;?>
+
+    <?php if (isset($_SESSION['login'])): ?>
+        <a href="" class="btn btn-success btn-md mb-3" onclick="tambah()" data-toggle="modal" data-target="#exampleModalCenter">Tambah Pengarang</a>
+    <?php endif; ?>
     <!-- DataTales Example -->
 
     <div class="card shadow mb-4">
@@ -57,27 +81,28 @@ if (isset($_POST['edit'])) {
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead class="thead-dark">
+                    <thead class="thead-dark">
                         <tr>
                             <th>No</th>
                             <th>Nama Pengarang</th>
-                            <?php if(isset($_SESSION['login'])):?>
-                            <th>Action</th>
-                            <?php endif;?>
+                            <?php if (isset($_SESSION['login'])): ?>
+                                <th>Action</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $no = 1;
                         $row = tampil("pengarang");
                         while ($data = mysqli_fetch_assoc($row)) : ?>
-                            <tr >
+                            <tr>
                                 <td><?= $no; ?></td>
                                 <td><?= $data["nm_pengarang"]; ?></td>
-                                <?php if(isset($_SESSION['login'])):?>
-                                <td><a class="btn btn-warning" href="#" onclick="edit(<?= $data['idpeng']; ?>)" data-toggle="modal" data-target="#exampleModalCenter">edit</a>
-                                <a class="btn btn-danger" href="hapuspengarang.php?id=<?= $data["idpeng"]; ?>" onclick="return confirm('yakin ingin hapus data?')">hapus</a></td>
-                                <?php endif;?>
-                               </tr>
+                                <?php if (isset($_SESSION['login'])): ?>
+                                    <td><a class="btn btn-warning" href="#" onclick="edit(<?= $data['id']; ?>)" data-toggle="modal" data-target="#exampleModalCenter">edit</a>
+                                        <a class="btn btn-danger" href="hapuspengarang.php?id=<?= $data["id"]; ?>" onclick="return confirm('yakin ingin hapus data?')">hapus</a>
+                                    </td>
+                                <?php endif; ?>
+                            </tr>
                             <?php $no++; ?>
                         <?php endwhile; ?>
                     </tbody>

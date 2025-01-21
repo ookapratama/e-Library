@@ -2,7 +2,7 @@
 include 'fungsi.php';
 
 $id = $_GET['id'];
-$row = mysqli_query($conn, "SELECT * FROM pengarang WHERE idpeng='$id'");
+$row = mysqli_query($conn, "SELECT * FROM pengarang WHERE id='$id'");
 $data = mysqli_fetch_assoc($row);
 
 ?>

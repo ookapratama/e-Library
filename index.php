@@ -128,7 +128,7 @@ include 'header.php';
     <!-- end card buku -->
     <!-- card data peminjaman -->
     <?php if(isset($_SESSION['login'])):?>
-    <div class="col-lg-3 md-4 sl-6">
+    <!-- <div class="col-lg-3 md-4 sl-6">
       <div class="card text-white  mb-3" style="max-width: 18rem; background-color: deeppink;">
         <div class="card-header bg-transparent border-primary">Data Peminjaman</div>
         <div class="card-body ">
@@ -148,10 +148,10 @@ include 'header.php';
         </div>
         <div class="card-footer border-dark text-dark" style="background-color: white;"><a href="pinjam.php">View Details</a></div>
       </div>
-    </div>
+    </div> -->
     <!-- end card peminjaman -->
     <!-- card data pengembalian -->
-    <div class="col-lg-3 md-4 sl-6">
+    <!-- <div class="col-lg-3 md-4 sl-6">
       <div class="card text-white  mb-3" style="max-width: 18rem; background-color: orangered;">
         <div class="card-header bg-transparent border-primary">Data Pengembalian</div>
         <div class="card-body ">
@@ -171,7 +171,7 @@ include 'header.php';
         </div>
         <div class="card-footer border-dark text-dark" style="background-color: white;"><a href="pengembalian.php">View Details</a></div>
       </div>
-    </div>
+    </div> -->
     <!-- end card peminjaman -->
     <?php endif;?>
 
