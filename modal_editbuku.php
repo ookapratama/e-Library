@@ -82,7 +82,7 @@ $data = mysqli_fetch_assoc($row);
                 <select class="form-control" id="idpen" name="idpen" required>
                     <option value="" selected disabled hidden>Choose here</option>
                     <?php while ($penerbit = mysqli_fetch_assoc($row)): ?>
-                        <option <?= $penerbit['idpen'] == $data['idpen'] ? 'selected' : '' ?> value="<?= $penerbit['idpen']; ?>"><?= $penerbit['penerbit']; ?></option>
+                        <option <?= $penerbit['id'] == $data['idpen'] ? 'selected' : '' ?> value="<?= $penerbit['id']; ?>"><?= $penerbit['penerbit']; ?></option>
                     <?php endwhile; ?>
                 </select>
             </div>

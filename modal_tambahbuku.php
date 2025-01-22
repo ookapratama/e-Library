@@ -75,7 +75,7 @@ include 'fungsi.php';
                 <select class="form-control" id="idpen" name="idpen" required>
                     <option value="" selected disabled hidden>Choose here</option>
                     <?php while ($data = mysqli_fetch_assoc($row)): ?>
-                        <option value="<?= $data['idpen']; ?>"><?= $data['penerbit']; ?></option>
+                        <option value="<?= $data['id']; ?>"><?= $data['penerbit']; ?></option>
                     <?php endwhile; ?>
                 </select>
             </div>

@@ -147,7 +147,7 @@ if (isset($_POST['edit'])) {
           </thead>
           <tbody>
             <?php $no = 1;
-            $row = mysqli_query($conn, "SELECT a.*, b.nm_pengarang as nm_pengarang, c.penerbit as penerbit FROM buku a, pengarang b, penerbit c WHERE a.idpeng=b.id AND a.idpen=c.idpen");
+            $row = mysqli_query($conn, "SELECT a.*, b.nm_pengarang as nm_pengarang, c.penerbit as penerbit FROM buku a, pengarang b, penerbit c WHERE a.idpeng=b.id AND a.idpen=c.id");
             while ($data = mysqli_fetch_assoc($row)) : ?>
               <tr>
                 <td><?= $no; ?></td>
@@ -160,7 +160,7 @@ if (isset($_POST['edit'])) {
                 </td>
                 <td><?= $data["judul"]; ?></td>
                 <td><?= $data["tahun"]; ?></td>
-                <td><?= $data["jumlah"]; ?></td>
+                <td class="text-nowrap"><?= $data["jumlah"]; ?></td>
                 <td><?= $data["nm_pengarang"]; ?></td>
                 <td><?= $data["penerbit"]; ?></td>
                 <td><?= $data["jenis"] ?? '-'; ?></td>

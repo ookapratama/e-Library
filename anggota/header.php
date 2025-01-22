@@ -2,11 +2,11 @@
 include '../fungsi.php';
 error_reporting(0);
 
-if(isset($_SESSION['agt'])){
-$nama = $_SESSION['nama'];
-$id = $_SESSION['idagt'];
-}else{
-    $nama="user";
+if (isset($_SESSION['agt'])) {
+    $nama = $_SESSION['nama'];
+    $id = $_SESSION['idagt'];
+} else {
+    $nama = "user";
 }
 ?>
 <!DOCTYPE html>
@@ -19,7 +19,7 @@ $id = $_SESSION['idagt'];
     <meta name="description" content="" />
     <meta name="author" content="" />
     <link rel="icon" type="image" href="../icon.png">
-    <title>E-Perpustakaan</title>
+    <title>E-Perpus Sespimmen 65</title>
 
     <!-- Custom fonts for this template -->
     <link href="../vendor/fontawesome-free-5.14.0-web/css/all.min.css" rel="stylesheet" type="text/css" />
@@ -45,7 +45,7 @@ $id = $_SESSION['idagt'];
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="../buku.png" alt="">
                 </div>
-                <div class="sidebar-brand-text mx-3">perpustakaan</div>
+                <div class="sidebar-brand-text mx-3">E-Perpus Sespimmen 65</div>
             </a>
 
             <!-- Divider -->
@@ -56,7 +56,7 @@ $id = $_SESSION['idagt'];
                 <a class="nav-link" href="index.php?back=1">
                     <i class="fa fa-desktop" aria-hidden="true"></i>
                     <span>Dashboard</span></a>
-            </li>            
+            </li>
             <!-- menu 4 -->
             <li class="nav-item" id="dataanggota">
                 <a class="nav-link" href="pinjam.php">
@@ -69,20 +69,20 @@ $id = $_SESSION['idagt'];
                     <i class="fa fa-user-tie" aria-hidden="true"></i>
                     <span>Pengembalian</span></a>
             </li>
-            <?php if(isset($_SESSION['agt'])):?>
+            <?php if (isset($_SESSION['agt'])): ?>
                 <li class="nav-item" id="menu6">
                     <a class="nav-link" href="logout.php">
                         <i class="fa fa-outdent" aria-hidden="true"></i>
                         <span>Logout</span></a>
-            </li>
-            <?php else:?>
-            <li class="nav-item" id="menu6">
-                <a class="nav-link" href="login.php">
-                    <i class="fa fa-indent" aria-hidden="true"></i>
-                    <span>Login</span></a>
-            </li>
-            <?php endif;?>
-            
+                </li>
+            <?php else: ?>
+                <li class="nav-item" id="menu6">
+                    <a class="nav-link" href="login.php">
+                        <i class="fa fa-indent" aria-hidden="true"></i>
+                        <span>Login</span></a>
+                </li>
+            <?php endif; ?>
+
 
         </ul>
         <!-- End of Sidebar -->
@@ -105,7 +105,9 @@ $id = $_SESSION['idagt'];
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php if($nama!=null){echo $nama;};?></span>
+                        <span class="mr-2 d-none d-lg-inline "><?php if ($nama != null) {
+                                                                                        echo $nama;
+                                                                                    }; ?></span>
                     </ul>
 
                 </nav>

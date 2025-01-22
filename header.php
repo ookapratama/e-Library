@@ -18,7 +18,7 @@ $nama = $_SESSION['nama'];
     <meta name="description" content="" />
     <meta name="author" content="" />
     <link rel="icon" type="image" href="icon.png">
-    <title>Perpustakaan</title>
+    <title>E-Perpus Sespimmen 65</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free-5.14.0-web/css/all.min.css" rel="stylesheet" type="text/css" />
@@ -44,7 +44,7 @@ $nama = $_SESSION['nama'];
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="buku.png" alt="">
                 </div>
-                <div class="sidebar-brand-text mx-3">perpustakaan</div>
+                <div class="sidebar-brand-text mx-3">E-Perpus Sespimmen 65</div>
             </a>
 
             <!-- Divider -->
@@ -90,6 +90,12 @@ $nama = $_SESSION['nama'];
                     <i class="fas fa-book" aria-hidden="true"></i>
                     <span>Daftar Buku</span></a>
             </li>
+            <!-- menu 8 -->
+            <!-- <li class="nav-item" id="kategori">
+                <a class="nav-link" href="kategori.php">
+                    <i class="fas fa-book" aria-hidden="true"></i>
+                    <span>Data Kategori</span></a>
+            </li> -->
              <!-- <?php if(isset($_SESSION['login'])):?>
              <li class="nav-item" id="pinjam">
                 <a class="nav-link" href="pinjam.php">
@@ -144,7 +150,7 @@ $nama = $_SESSION['nama'];
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php if($nama!=null){echo $nama;};?></span>
+                        <span class="mr-2 d-none d-lg-inline ">Hi, <?php if($nama!=null){echo $nama;};?></span>
                     </ul>
 
                 </nav>
